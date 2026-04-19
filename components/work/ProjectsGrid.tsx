@@ -2,16 +2,67 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ExternalLink } from 'lucide-react'
 import type { Project } from '@/lib/types'
-import { Tag } from '@/components/ui/Tag'
-import { cn } from '@/lib/cn'
+import { useLanguage } from '@/lib/i18n'
+import { useInView } from '@/hooks/useInView'
+import { StripedPlaceholder } from '@/components/ui/StripedPlaceholder'
 
-const fadeUpItem = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
-  exit: { opacity: 0, scale: 0.96, transition: { duration: 0.2 } },
+function ArrowUpRightIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M7 17 17 7"/><path d="M7 7h10v10"/>
+    </svg>
+  )
+}
+
+function ProjectCard({ project, lang }: { project: Project; lang: string }) {
+  const [ref, inView] = useInView()
+  const title = lang === 'ar' && project.ar ? project.ar.title : project.title
+  const summary = lang === 'ar' && project.ar ? project.ar.summary : project.summary
+
+  return (
+    <Link
+      ref={ref as React.RefObject<HTMLAnchorElement>}
+      href={`/work/${project.slug}`}
+      className={`group relative rounded-2xl overflow-hidden border flex flex-col bg-[#070707] border-[#52057B]/25 ${inView ? 'animate-fade-up' : 'opacity-0'}`}
+      style={{ animationFillMode: 'both' }}
+    >
+      <StripedPlaceholder
+        label={`${title} / Screenshot`}
+        dark
+        className="min-h-[200px]"
+        angle={project.id % 2 === 0 ? 45 : -45}
+      />
+      <div className="p-6">
+        <div className="flex items-start justify-between gap-3 mb-2">
+          <div>
+            <div className="font-mono text-[10px] tracking-widest uppercase mb-1 text-white/30">
+              {project.category} · {project.year}
+            </div>
+            <h3 className="text-lg font-bold tracking-tight text-white">
+              {title}
+            </h3>
+          </div>
+          <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-all group-hover:rotate-45 bg-[#52057B]/30 border border-[#52057B]/50 text-[#BC6FF1] group-hover:bg-[#892CDC] group-hover:border-[#892CDC] group-hover:text-white">
+            <ArrowUpRightIcon />
+          </div>
+        </div>
+        <p className="text-sm leading-relaxed mb-3 line-clamp-2 text-white/50">
+          {summary}
+        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {project.tags.slice(0, 3).map((tag) => (
+            <span
+              key={tag}
+              className="px-2 py-0.5 text-[10px] font-mono rounded border border-[#52057B]/30 text-white/40"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </Link>
+  )
 }
 
 export function ProjectsGrid({
@@ -22,95 +73,33 @@ export function ProjectsGrid({
   categories: string[]
 }) {
   const [active, setActive] = useState('All')
+  const { lang, t } = useLanguage()
 
-  const filtered =
-    active === 'All' ? projects : projects.filter((p) => p.category === active)
+  const filtered = active === 'All' ? projects : projects.filter((p) => p.category === active)
 
   return (
     <div>
-      {/* Category filter */}
-      <div className="flex flex-wrap gap-2 mb-10 justify-center">
+      <div className="flex flex-wrap gap-2 mb-10">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActive(cat)}
-            className={cn(
-              'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer',
+            className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer border ${
               active === cat
-                ? 'bg-brand-700 text-white'
-                : 'bg-white/5 text-white/50 hover:text-white border border-white/5 hover:border-white/10'
-            )}
+                ? 'bg-[#892CDC] text-white border-[#892CDC]'
+                : 'bg-transparent text-white/50 border-white/10 hover:border-[#892CDC] hover:text-white'
+            }`}
           >
-            {cat}
+            {cat === 'All' ? t.projects.allCategories : cat}
           </button>
         ))}
       </div>
 
-      {/* Grid */}
-      <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        <AnimatePresence mode="popLayout">
-          {filtered.map((project) => (
-            <motion.div
-              key={project.id}
-              layout
-              variants={fadeUpItem}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-            >
-              <Link
-                href={`/work/${project.slug}`}
-                className="group block relative rounded-2xl overflow-hidden border border-white/5 hover:border-brand-700/40 transition-all duration-300"
-                style={{
-                  background: `linear-gradient(135deg, ${project.coverColor} 0%, ${project.accentColor}40 100%)`,
-                }}
-              >
-                {/* Image area */}
-                <div className="relative h-56 flex items-center justify-center overflow-hidden">
-                  <div className="absolute inset-0 bg-hero-grid bg-grid-40 opacity-20" aria-hidden="true" />
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{
-                      background: `radial-gradient(circle at center, ${project.accentColor}30 0%, transparent 70%)`,
-                    }}
-                    aria-hidden="true"
-                  />
-                  <span className="relative z-10 px-3 py-1.5 rounded-full text-xs font-semibold bg-white/10 text-white/70 border border-white/10">
-                    {project.category}
-                  </span>
-                </div>
-
-                {/* Content */}
-                <div
-                  className="p-6"
-                  style={{ background: 'rgba(17,0,28,0.6)', backdropFilter: 'blur(8px)' }}
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h3 className="text-base font-semibold text-white">{project.title}</h3>
-                      <span className="text-xs text-white/40">{project.year}</span>
-                    </div>
-                    <ExternalLink
-                      size={14}
-                      className="text-white/20 group-hover:text-brand-400 transition-colors duration-200 mt-1 flex-shrink-0"
-                    />
-                  </div>
-                  <p className="text-sm text-white/50 leading-relaxed line-clamp-2 mb-4">
-                    {project.summary}
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.tags.slice(0, 3).map((tag) => (
-                      <Tag key={tag} variant="ghost">
-                        {tag}
-                      </Tag>
-                    ))}
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {filtered.map((project) => (
+          <ProjectCard key={project.id} project={project} lang={lang} />
+        ))}
+      </div>
     </div>
   )
 }

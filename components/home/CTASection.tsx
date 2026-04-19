@@ -1,38 +1,65 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Mail, Phone, CheckCircle, ArrowRight, Send } from 'lucide-react'
-import { SectionLabel } from '@/components/ui/SectionLabel'
-import { AnimatedSection } from '@/components/ui/AnimatedSection'
-import type { Testimonial } from '@/lib/types'
+import { useInView } from '@/hooks/useInView'
+import { Eyebrow } from '@/components/ui/Eyebrow'
+import { Display } from '@/components/ui/Display'
+import { useLanguage } from '@/lib/i18n'
 
-function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
+function MailIcon() {
   return (
-    <div className="glass-light rounded-2xl p-6 border border-white/5">
-      <p className="text-sm text-white/60 leading-relaxed mb-4 italic">
-        &ldquo;{testimonial.quote}&rdquo;
-      </p>
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-brand-700/60 flex items-center justify-center text-xs font-bold text-brand-300">
-          {testimonial.author[0]}
-        </div>
-        <div>
-          <p className="text-sm font-semibold text-white">{testimonial.author}</p>
-          <p className="text-xs text-white/40">{testimonial.title}, {testimonial.company}</p>
-        </div>
-      </div>
-    </div>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/>
+    </svg>
   )
 }
 
-export function CTASection({ testimonials }: { testimonials: Testimonial[] }) {
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+function PhoneIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.13 11.9 19.79 19.79 0 0 1 1.07 3.27 2 2 0 0 1 3.05 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 16z"/>
+    </svg>
+  )
+}
+
+function PinIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s-8-4.5-8-12a8 8 0 1 1 16 0c0 7.5-8 12-8 12z"/><circle cx="12" cy="10" r="3"/>
+    </svg>
+  )
+}
+
+function ArrowRightIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 12h14"/><path d="M13 5l7 7-7 7"/>
+    </svg>
+  )
+}
+
+function CheckIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m5 13 4 4L19 7"/>
+    </svg>
+  )
+}
+
+const budgets = ['< $5k', '$5–15k', '$15–30k', '$30k+']
+
+export function CTASection() {
+  const [ref, inView] = useInView()
+  const { t } = useLanguage()
+  const [submitted, setSubmitted] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
+  const [form, setForm] = useState({ name: '', email: '', budget: '', message: '' })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setStatus('sending')
+    setSending(true)
+    setError('')
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
@@ -40,182 +67,204 @@ export function CTASection({ testimonials }: { testimonials: Testimonial[] }) {
         body: JSON.stringify(form),
       })
       if (res.ok) {
-        setStatus('sent')
-        setForm({ name: '', email: '', message: '' })
+        setSubmitted(true)
       } else {
-        setStatus('error')
+        setError(t.cta.form.error)
       }
     } catch {
-      setStatus('error')
+      setError(t.cta.form.error)
+    } finally {
+      setSending(false)
     }
   }
 
   return (
-    <section id="cta" className="section-padding relative overflow-hidden">
-      {/* Dark background */}
+    <section id="cta" className="py-28 bg-black relative overflow-hidden">
+      {/* Ghost background type */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.025] select-none overflow-hidden">
+        <div
+          className="text-white font-black tracking-tighter leading-[0.8]"
+          style={{ fontSize: 'clamp(200px, 40vw, 720px)' }}
+        >
+          MMB
+        </div>
+      </div>
+
+      {/* Radial purple glow */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'linear-gradient(180deg, #11001C 0%, #140129 40%, #220135 100%)' }}
-        aria-hidden="true"
+        style={{
+          background: 'radial-gradient(ellipse 50% 60% at 70% 50%, rgba(82,5,123,0.15) 0%, transparent 70%)',
+        }}
       />
-      <div className="absolute inset-0 bg-hero-grid bg-grid-40 opacity-20 pointer-events-none" aria-hidden="true" />
-      {/* Glow */}
+
       <div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-64 blur-3xl opacity-20 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse, #520380 0%, transparent 70%)' }}
-        aria-hidden="true"
-      />
+        ref={ref as React.RefObject<HTMLDivElement>}
+        className={`relative max-w-[1400px] mx-auto px-6 lg:px-10 ${inView ? 'animate-fade-up' : 'opacity-0'}`}
+      >
+        <div className="grid grid-cols-12 gap-8 lg:gap-16">
+          {/* Left */}
+          <div className="col-span-12 lg:col-span-5">
+            <Eyebrow num="→">{t.cta.label}</Eyebrow>
+            <Display className="text-[clamp(40px,6vw,88px)]">
+              {t.cta.title}{' '}
+              <span
+                className="italic"
+                style={{ fontFamily: 'var(--font-instrument), Georgia, serif', fontWeight: 400 }}
+              >
+                {t.cta.titleAccent.replace('something great?', 'something')}
+              </span>
+              ?
+            </Display>
+            <p className="mt-8 text-white/45 text-lg leading-relaxed max-w-md">{t.cta.subtitle}</p>
 
-      <div className="container-wide relative">
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
-          {/* Left — copy + testimonials */}
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-4">
-              <AnimatedSection direction="left">
-                <SectionLabel>Get in Touch</SectionLabel>
-              </AnimatedSection>
-              <AnimatedSection direction="left" delay={0.1}>
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white text-balance">
-                  Ready to build{' '}
-                  <span className="bg-gradient-to-r from-brand-400 to-brand-500 bg-clip-text text-transparent">
-                    something great?
-                  </span>
-                </h2>
-              </AnimatedSection>
-              <AnimatedSection direction="left" delay={0.15}>
-                <p className="text-base text-white/50 leading-relaxed">
-                  Tell us about your project. We&rsquo;ll get back to you within 24 hours
-                  with a clear plan and a fair quote.
-                </p>
-              </AnimatedSection>
+            <div className="mt-10 flex flex-col gap-2">
+              <a
+                href={`mailto:${t.cta.email}`}
+                className="group flex items-center justify-between gap-4 py-4 border-t border-white/[0.07]"
+              >
+                <span className="flex items-center gap-3 text-white/45 group-hover:text-white transition-colors">
+                  <MailIcon />
+                  <span className="font-mono text-xs tracking-widest uppercase">Email</span>
+                </span>
+                <span className="text-white/80 text-sm font-medium group-hover:text-[#BC6FF1] group-hover:translate-x-1 transition-all">
+                  {t.cta.email}
+                </span>
+              </a>
+              <a
+                href={`tel:${t.cta.phone}`}
+                className="group flex items-center justify-between gap-4 py-4 border-t border-white/[0.07]"
+              >
+                <span className="flex items-center gap-3 text-white/45 group-hover:text-white transition-colors">
+                  <PhoneIcon />
+                  <span className="font-mono text-xs tracking-widest uppercase">Phone</span>
+                </span>
+                <span className="text-white/80 text-sm font-medium group-hover:text-[#BC6FF1] group-hover:translate-x-1 transition-all">
+                  {t.cta.phone}
+                </span>
+              </a>
+              <div className="flex items-center justify-between gap-4 py-4 border-t border-b border-white/[0.07]">
+                <span className="flex items-center gap-3 text-white/45">
+                  <PinIcon />
+                  <span className="font-mono text-xs tracking-widest uppercase">Based</span>
+                </span>
+                <span className="text-white/80 text-sm font-medium">Remote · Global</span>
+              </div>
             </div>
-
-            {/* Contact info */}
-            <AnimatedSection direction="left" delay={0.2} className="flex flex-col gap-3">
-              <a
-                href="mailto:hello@mmb.dev"
-                className="flex items-center gap-3 text-sm text-white/50 hover:text-white transition-colors duration-200 group w-fit"
-              >
-                <Mail size={16} className="text-brand-500 flex-shrink-0" />
-                hello@mmb.dev
-              </a>
-              <a
-                href="tel:+12345678900"
-                className="flex items-center gap-3 text-sm text-white/50 hover:text-white transition-colors duration-200 group w-fit"
-              >
-                <Phone size={16} className="text-brand-500 flex-shrink-0" />
-                +1 (234) 567-890
-              </a>
-            </AnimatedSection>
-
-            {/* Testimonials */}
-            <AnimatedSection direction="left" delay={0.25} className="flex flex-col gap-4">
-              {testimonials.slice(0, 2).map((t) => (
-                <TestimonialCard key={t.author} testimonial={t} />
-              ))}
-            </AnimatedSection>
           </div>
 
-          {/* Right — form */}
-          <AnimatedSection direction="right" delay={0.1}>
-            <div className="glass rounded-3xl p-8">
-              {status === 'sent' ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="flex flex-col items-center text-center gap-4 py-8"
-                >
-                  <CheckCircle size={48} className="text-brand-400" />
-                  <h3 className="text-xl font-bold text-white">Message sent!</h3>
-                  <p className="text-sm text-white/50">
-                    We&rsquo;ll review your project and get back to you within 24 hours.
-                  </p>
+          {/* Right form */}
+          <div className="col-span-12 lg:col-span-7">
+            <div className="bg-white/[0.02] border border-[#52057B]/30 rounded-2xl p-8 lg:p-10 backdrop-blur-sm">
+              {submitted ? (
+                <div className="flex flex-col items-start py-16 gap-5">
+                  <div className="w-12 h-12 rounded-full border border-[#892CDC]/50 bg-[#52057B]/20 flex items-center justify-center text-[#BC6FF1]">
+                    <CheckIcon />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-black text-white tracking-tight mb-2">
+                      {t.cta.form.success}
+                    </h3>
+                    <p className="text-white/45 max-w-sm text-sm leading-relaxed">
+                      {t.cta.form.successMsg}
+                    </p>
+                  </div>
                   <button
-                    onClick={() => setStatus('idle')}
-                    className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-brand-400 hover:text-white transition-colors cursor-pointer"
+                    onClick={() => {
+                      setSubmitted(false)
+                      setForm({ name: '', email: '', budget: '', message: '' })
+                    }}
+                    className="text-white/45 hover:text-white text-sm underline underline-offset-4 cursor-pointer"
                   >
-                    <ArrowRight size={15} />
-                    Send another message
+                    {t.cta.form.sendAnother}
                   </button>
-                </motion.div>
+                </div>
               ) : (
-                <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                  <div>
-                    <label htmlFor="name" className="block text-xs font-semibold text-white/50 mb-2 uppercase tracking-wider">
-                      Your Name
-                    </label>
-                    <input
-                      id="name"
-                      type="text"
-                      required
-                      placeholder="John Doe"
-                      value={form.name}
-                      onChange={(e) => setForm({ ...form, name: e.target.value })}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-brand-600/60 focus:ring-1 focus:ring-brand-600/30 transition-all duration-200"
-                    />
+                <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                  <div className="grid md:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-[10px] font-mono tracking-widest uppercase text-white/40 mb-3">
+                        {t.cta.form.name}
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={form.name}
+                        onChange={(e) => setForm({ ...form, name: e.target.value })}
+                        placeholder={t.cta.form.namePlaceholder}
+                        className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-white placeholder-white/25 focus:outline-none focus:border-[#892CDC]/60 transition-colors text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-mono tracking-widest uppercase text-white/40 mb-3">
+                        {t.cta.form.email}
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={form.email}
+                        onChange={(e) => setForm({ ...form, email: e.target.value })}
+                        placeholder={t.cta.form.emailPlaceholder}
+                        className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-white placeholder-white/25 focus:outline-none focus:border-[#892CDC]/60 transition-colors text-sm"
+                      />
+                    </div>
                   </div>
+
                   <div>
-                    <label htmlFor="email" className="block text-xs font-semibold text-white/50 mb-2 uppercase tracking-wider">
-                      Email Address
+                    <label className="block text-[10px] font-mono tracking-widest uppercase text-white/40 mb-3">
+                      Budget
                     </label>
-                    <input
-                      id="email"
-                      type="email"
-                      required
-                      placeholder="john@company.com"
-                      value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-brand-600/60 focus:ring-1 focus:ring-brand-600/30 transition-all duration-200"
-                    />
+                    <div className="grid grid-cols-4 gap-2">
+                      {budgets.map((b) => (
+                        <button
+                          key={b}
+                          type="button"
+                          onClick={() => setForm({ ...form, budget: b })}
+                          className={`px-3 py-2.5 rounded-lg text-xs font-medium border transition-all cursor-pointer ${
+                            form.budget === b
+                              ? 'bg-[#892CDC] text-white border-[#892CDC]'
+                              : 'bg-transparent text-white/50 border-white/10 hover:border-[#892CDC]/60 hover:text-white'
+                          }`}
+                        >
+                          {b}
+                        </button>
+                      ))}
+                    </div>
                   </div>
+
                   <div>
-                    <label htmlFor="message" className="block text-xs font-semibold text-white/50 mb-2 uppercase tracking-wider">
-                      Project Brief
+                    <label className="block text-[10px] font-mono tracking-widest uppercase text-white/40 mb-3">
+                      {t.cta.form.message}
                     </label>
                     <textarea
-                      id="message"
                       required
                       rows={5}
-                      placeholder="Tell us about your project, goals, and timeline..."
                       value={form.message}
                       onChange={(e) => setForm({ ...form, message: e.target.value })}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-brand-600/60 focus:ring-1 focus:ring-brand-600/30 transition-all duration-200 resize-none"
+                      placeholder={t.cta.form.messagePlaceholder}
+                      className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-white placeholder-white/25 focus:outline-none focus:border-[#892CDC]/60 transition-colors text-sm resize-none"
                     />
                   </div>
 
-                  {status === 'error' && (
-                    <p className="text-xs text-red-400">
-                      Something went wrong. Please try again or email us directly.
-                    </p>
-                  )}
+                  {error && <p className="text-red-400 text-sm">{error}</p>}
 
                   <button
                     type="submit"
-                    disabled={status === 'sending'}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold bg-brand-700 hover:bg-brand-600 disabled:opacity-60 disabled:cursor-not-allowed text-white transition-all duration-200 glow-purple cursor-pointer"
+                    disabled={sending}
+                    className="group flex items-center justify-between gap-2 w-full px-6 py-4 bg-[#892CDC] text-white font-bold rounded-xl hover:bg-[#52057B] transition-colors cursor-pointer text-sm disabled:opacity-60"
                   >
-                    {status === 'sending' ? (
-                      <>
-                        <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                        </svg>
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <Send size={15} />
-                        Send Message
-                      </>
-                    )}
+                    <span>{sending ? t.cta.form.sending : t.cta.form.submit}</span>
+                    <span className="flex items-center gap-2">
+                      <span className="font-mono text-[10px] text-white/60 uppercase tracking-widest">
+                        Reply &lt; 24h
+                      </span>
+                      <ArrowRightIcon />
+                    </span>
                   </button>
-                  <p className="text-center text-xs text-white/25">
-                    No spam. Just a reply within 24 hours.
-                  </p>
                 </form>
               )}
             </div>
-          </AnimatedSection>
+          </div>
         </div>
       </div>
     </section>

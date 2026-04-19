@@ -1,113 +1,133 @@
 'use client'
 
-import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { ArrowRight, ExternalLink } from 'lucide-react'
+import { useState } from 'react'
+import { useInView } from '@/hooks/useInView'
+import { Eyebrow } from '@/components/ui/Eyebrow'
+import { Display } from '@/components/ui/Display'
+import { StripedPlaceholder } from '@/components/ui/StripedPlaceholder'
+import { useLanguage } from '@/lib/i18n'
+import { getAllProjects } from '@/lib/data/projects'
 import type { Project } from '@/lib/types'
-import { SectionLabel } from '@/components/ui/SectionLabel'
-import { Tag } from '@/components/ui/Tag'
-import { AnimatedSection } from '@/components/ui/AnimatedSection'
-import { staggerContainer, fadeUp } from '@/lib/animations'
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+function ArrowUpRightIcon() {
   return (
-    <motion.div variants={fadeUp} custom={index}>
-      <Link
-        href={`/work/${project.slug}`}
-        className="group block relative rounded-2xl overflow-hidden border border-white/5 hover:border-brand-700/40 transition-all duration-300"
-        style={{ background: `linear-gradient(135deg, ${project.coverColor} 0%, ${project.accentColor}40 100%)` }}
-      >
-        {/* Card image area */}
-        <div className="relative h-52 flex items-center justify-center overflow-hidden">
-          {/* Decorative grid inside card */}
-          <div className="absolute inset-0 bg-hero-grid bg-grid-40 opacity-20" aria-hidden="true" />
-          {/* Glow */}
-          <div
-            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-            style={{ background: `radial-gradient(circle at center, ${project.accentColor}30 0%, transparent 70%)` }}
-            aria-hidden="true"
-          />
-          {/* Category badge */}
-          <div className="relative z-10">
-            <span className="px-3 py-1.5 rounded-full text-xs font-semibold bg-white/10 text-white/70 border border-white/10">
-              {project.category}
-            </span>
-          </div>
-        </div>
-
-        {/* Card content */}
-        <div className="p-6" style={{ background: 'rgba(17,0,28,0.6)', backdropFilter: 'blur(8px)' }}>
-          <div className="flex items-start justify-between mb-3">
-            <div>
-              <h3 className="text-base font-semibold text-white">{project.title}</h3>
-              <span className="text-xs text-white/40">{project.year}</span>
-            </div>
-            <ExternalLink
-              size={14}
-              className="text-white/20 group-hover:text-brand-400 transition-colors duration-200 mt-1 flex-shrink-0"
-            />
-          </div>
-          <p className="text-sm text-white/50 leading-relaxed line-clamp-2 mb-4">
-            {project.summary}
-          </p>
-          <div className="flex flex-wrap gap-1.5">
-            {project.tags.slice(0, 3).map((tag) => (
-              <Tag key={tag} variant="ghost">{tag}</Tag>
-            ))}
-          </div>
-        </div>
-      </Link>
-    </motion.div>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M7 17 17 7"/><path d="M7 7h10v10"/>
+    </svg>
   )
 }
 
-export function ProjectsPreview({ projects }: { projects: Project[] }) {
+function ProjectCard({ project, index, span, lang }: { project: Project; index: number; span: string; lang: string }) {
+  const [ref, inView] = useInView()
+  const title = lang === 'ar' && project.ar ? project.ar.title : project.title
+  const summary = lang === 'ar' && project.ar ? project.ar.summary : project.summary
+
   return (
-    <section id="projects" className="section-padding relative overflow-hidden">
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: 'linear-gradient(180deg, #11001C 0%, #140129 50%, #11001C 100%)' }}
-        aria-hidden="true"
+    <div
+      ref={ref as React.RefObject<HTMLDivElement>}
+      className={`group relative rounded-2xl overflow-hidden border flex flex-col bg-[#070707] border-[#52057B]/25 ${span} ${
+        inView ? 'animate-fade-up' : 'opacity-0'
+      }`}
+      style={{ animationDelay: `${index * 70}ms`, animationFillMode: 'both' }}
+    >
+      <StripedPlaceholder
+        label={`${title} / Screenshot`}
+        dark
+        className="flex-1 min-h-[180px]"
+        angle={project.id % 2 === 0 ? 45 : -45}
       />
-
-      <div className="container-wide relative">
-        {/* Header */}
-        <AnimatedSection className="flex flex-col items-center text-center gap-4 mb-16">
-          <SectionLabel>Our Work</SectionLabel>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white max-w-2xl text-balance">
-            Selected{' '}
-            <span className="bg-gradient-to-r from-brand-400 to-brand-500 bg-clip-text text-transparent">
-              projects
+      <div className="p-6">
+        <div className="flex items-start justify-between gap-3 mb-2">
+          <div>
+            <div className="font-mono text-[10px] tracking-widest uppercase mb-1 text-white/30">
+              {project.category} · {project.year}
+            </div>
+            <h3 className="text-xl font-bold tracking-tight text-white">
+              {title}
+            </h3>
+          </div>
+          <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-all group-hover:rotate-45 bg-[#52057B]/30 border border-[#52057B]/50 text-[#BC6FF1] group-hover:bg-[#892CDC] group-hover:border-[#892CDC] group-hover:text-white">
+            <ArrowUpRightIcon />
+          </div>
+        </div>
+        <p className="text-sm leading-relaxed mb-3 text-white/50">
+          {summary}
+        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {project.tags.map((tag) => (
+            <span
+              key={tag}
+              className="px-2 py-0.5 text-[10px] font-mono rounded border border-[#52057B]/30 text-white/40"
+            >
+              {tag}
             </span>
-          </h2>
-          <p className="text-base text-white/45 max-w-xl leading-relaxed">
-            From platforms to landing pages — every project is crafted with precision and purpose.
-          </p>
-        </AnimatedSection>
-
-        {/* Grid */}
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
-          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"
-        >
-          {projects.map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} />
           ))}
-        </motion.div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
-        {/* CTA */}
-        <AnimatedSection className="flex justify-center mt-12" delay={0.2}>
-          <Link
-            href="/work"
-            className="group inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold border border-white/10 text-white/60 hover:text-white hover:border-white/20 transition-all duration-200"
-          >
-            View all projects
-            <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform duration-200" />
-          </Link>
-        </AnimatedSection>
+export function ProjectsPreview() {
+  const [headingRef, headingInView] = useInView()
+  const [activeCategory, setActiveCategory] = useState('All')
+  const { t, lang } = useLanguage()
+  const allProjects = getAllProjects()
+
+  const categories = ['All', ...Array.from(new Set(allProjects.map((p) => p.category)))]
+  const filtered = activeCategory === 'All' ? allProjects : allProjects.filter((p) => p.category === activeCategory)
+
+  return (
+    <section id="projects" className="py-28 bg-[#030303]">
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
+        <div
+          ref={headingRef as React.RefObject<HTMLDivElement>}
+          className={`flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14 ${
+            headingInView ? 'animate-fade-up' : 'opacity-0'
+          }`}
+        >
+          <div>
+            <Eyebrow num="02 / 06">{t.projects.label}</Eyebrow>
+            <Display className="text-[clamp(40px,6vw,80px)]">
+              {t.projects.title}{' '}
+              <span
+                className="italic"
+                style={{ fontFamily: 'var(--font-instrument), Georgia, serif', fontWeight: 400 }}
+              >
+                {t.projects.titleAccent}
+              </span>
+              .
+            </Display>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer border ${
+                  activeCategory === cat
+                    ? 'bg-[#892CDC] text-white border-[#892CDC]'
+                    : 'bg-transparent text-white/50 border-white/10 hover:border-[#892CDC] hover:text-white'
+                }`}
+              >
+                {cat === 'All' ? t.projects.allCategories : cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Asymmetric grid */}
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-5 auto-rows-[minmax(280px,auto)]">
+          {filtered.map((p, i) => {
+            const span =
+              p.displaySize === 'wide'
+                ? 'md:col-span-4'
+                : p.displaySize === 'tall'
+                  ? 'md:col-span-2 md:row-span-2'
+                  : 'md:col-span-2'
+            return <ProjectCard key={p.id} project={p} index={i} span={span} lang={lang} />
+          })}
+        </div>
       </div>
     </section>
   )

@@ -1,8 +1,6 @@
 'use client'
 
-import { motion, useInView, useReducedMotion } from 'framer-motion'
-import { useRef } from 'react'
-import { fadeUp, slideInLeft, slideInRight, fadeIn } from '@/lib/animations'
+import { useInView } from '@/hooks/useInView'
 import { cn } from '@/lib/cn'
 
 interface AnimatedSectionProps {
@@ -13,40 +11,20 @@ interface AnimatedSectionProps {
   margin?: string
 }
 
-const variantMap = {
-  up: fadeUp,
-  left: slideInLeft,
-  right: slideInRight,
-  none: fadeIn,
-}
-
 export function AnimatedSection({
   children,
   className,
   delay = 0,
-  direction = 'up',
-  margin = '-60px',
 }: AnimatedSectionProps) {
-  const ref = useRef(null)
-  const shouldReduceMotion = useReducedMotion()
-  const isInView = useInView(ref, { once: true, margin: margin as `${number}px` })
-
-  const variants = variantMap[direction]
-
-  if (shouldReduceMotion) {
-    return <div className={className}>{children}</div>
-  }
+  const [ref, inView] = useInView()
 
   return (
-    <motion.div
-      ref={ref}
-      variants={variants}
-      initial="hidden"
-      animate={isInView ? 'visible' : 'hidden'}
-      transition={{ delay }}
-      className={cn(className)}
+    <div
+      ref={ref as React.RefObject<HTMLDivElement>}
+      className={cn(inView ? 'animate-fade-up' : 'opacity-0', className)}
+      style={{ animationDelay: `${delay * 1000}ms`, animationFillMode: 'both' }}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }

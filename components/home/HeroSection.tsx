@@ -1,211 +1,176 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { ArrowRight, ChevronDown } from 'lucide-react'
-import { fadeUp, staggerContainer } from '@/lib/animations'
+import { useEffect, useState } from 'react'
+import { useLanguage } from '@/lib/i18n'
 
-// Particle canvas — cinematic purple ambient
-function ParticleCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+function scrollTo(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+}
 
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    let animId: number
-    let particles: Array<{
-      x: number; y: number; ox: number; oy: number
-      vx: number; vy: number; r: number; alpha: number
-    }> = []
-
-    const resize = () => {
-      canvas.width = canvas.offsetWidth
-      canvas.height = canvas.offsetHeight
-      init()
-    }
-
-    const init = () => {
-      particles = []
-      const count = Math.floor((canvas.width * canvas.height) / 8000)
-      for (let i = 0; i < count; i++) {
-        const x = Math.random() * canvas.width
-        const y = Math.random() * canvas.height
-        particles.push({
-          x, y, ox: x, oy: y,
-          vx: (Math.random() - 0.5) * 0.2,
-          vy: (Math.random() - 0.5) * 0.2,
-          r: Math.random() * 1.2 + 0.3,
-          alpha: Math.random() * 0.3 + 0.05,
-        })
-      }
-    }
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      for (const p of particles) {
-        p.x += p.vx
-        p.y += p.vy
-        if (Math.abs(p.x - p.ox) > 12) p.vx *= -1
-        if (Math.abs(p.y - p.oy) > 12) p.vy *= -1
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(107, 4, 168, ${p.alpha})`
-        ctx.fill()
-      }
-      animId = requestAnimationFrame(draw)
-    }
-
-    resize()
-    draw()
-    window.addEventListener('resize', resize)
-    return () => {
-      cancelAnimationFrame(animId)
-      window.removeEventListener('resize', resize)
-    }
-  }, [])
-
+function ArrowRightIcon() {
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full"
-      aria-hidden="true"
-    />
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 12h14" /><path d="M13 5l7 7-7 7" />
+    </svg>
   )
 }
 
-const stats = [
-  { value: '50+', label: 'Projects Delivered' },
-  { value: '98%', label: 'Client Satisfaction' },
-  { value: '< 2s', label: 'Avg Load Time' },
-  { value: '5+', label: 'Years Experience' },
+const indexItems = [
+  { n: '001', label: 'Services', sub: '06 offerings', id: 'services' },
+  { n: '002', label: 'Work', sub: '06 selected', id: 'projects' },
+  { n: '003', label: 'Process', sub: '06 phases', id: 'process' },
+  { n: '004', label: 'About', sub: 'Since 2019', id: 'about' },
+  { n: '005', label: 'FAQ', sub: '08 answers', id: 'faq' },
+  { n: '006', label: 'Contact', sub: 'hello@mmb.dev', id: 'cta' },
 ]
 
 export function HeroSection() {
+  const { t } = useLanguage()
+  const [time, setTime] = useState('')
+
+  useEffect(() => {
+    const update = () =>
+      setTime(new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }))
+    update()
+    const id = setInterval(update, 10000)
+    return () => clearInterval(id)
+  }, [])
+
+  const stats = [
+    { v: '50+', l: 'Projects delivered' },
+    { v: '98%', l: 'Client satisfaction' },
+    { v: '5yr', l: 'Track record' },
+    { v: '14d', l: 'Average kickoff' },
+  ]
+
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-brand-950"
+      className="relative min-h-screen flex items-center overflow-hidden bg-black pt-20 pb-12"
     >
-      {/* Particle canvas */}
-      <ParticleCanvas />
-
-      {/* Ambient glow orbs */}
-      <div
-        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 animate-glow pointer-events-none"
-        style={{ background: 'radial-gradient(circle, #520380 0%, transparent 70%)' }}
-        aria-hidden="true"
-      />
-      <div
-        className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl opacity-15 animate-glow pointer-events-none"
-        style={{ background: 'radial-gradient(circle, #3A025B 0%, transparent 70%)', animationDelay: '1.5s' }}
-        aria-hidden="true"
-      />
-
-      {/* Hero grid pattern */}
-      <div
-        className="absolute inset-0 bg-hero-grid bg-grid-40 opacity-100 pointer-events-none"
-        aria-hidden="true"
-      />
-
-      {/* Vignette */}
+      {/* Radial purple glow in background */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(17,0,28,0.8) 100%)' }}
-        aria-hidden="true"
+        style={{
+          background: 'radial-gradient(ellipse 60% 50% at 30% 50%, rgba(82,5,123,0.18) 0%, transparent 70%)',
+        }}
       />
 
-      {/* Content */}
-      <div className="relative z-10 container-wide flex flex-col items-center text-center pt-32 pb-24">
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          className="flex flex-col items-center gap-6 max-w-4xl"
-        >
-          {/* Badge */}
-          <motion.div variants={fadeUp} className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-500 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-400" />
-            </span>
-            <span className="text-xs font-semibold uppercase tracking-widest text-brand-400">
-              Premium Web Development & Digital Systems
-            </span>
-          </motion.div>
+      {/* Dot grid background */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-40"
+        style={{
+          backgroundImage: 'radial-gradient(circle, rgba(137,44,220,0.25) 1px, transparent 1px)',
+          backgroundSize: '32px 32px',
+          maskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 90%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 90%)',
+        }}
+      />
 
+      <div className="relative max-w-[1400px] mx-auto px-6 lg:px-10 w-full">
+        {/* Top meta bar */}
+        <div className="flex items-center justify-between text-[10px] font-mono tracking-widest uppercase text-white/25 mb-12 pt-4">
+          <div className="flex items-center gap-3">
+            <span>MMB · 001</span>
+            <span className="h-px w-6 bg-white/10" />
+            <span>Landing / 2026</span>
+          </div>
+          <div className="flex items-center gap-3">
+            {time && <span>{time} LOCAL</span>}
+            <span className="h-px w-6 bg-white/10" />
+            <span>Remote · Global</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-12 gap-6 items-end">
           {/* Headline */}
-          <motion.h1
-            variants={fadeUp}
-            className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[1.05] tracking-tight text-balance"
-          >
-            Building Modern{' '}
-            <span className="relative inline-block">
-              <span className="relative z-10 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 bg-clip-text text-transparent">
-                Websites
+          <div className="col-span-12 lg:col-span-9">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#52057B]/40 bg-[#52057B]/10 text-[11px] font-medium text-white/60 mb-8">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#892CDC]" />
+              Independent web studio
+            </div>
+
+            <h1
+              className="font-black tracking-[-0.02em] leading-[0.95] text-white"
+              style={{ fontSize: 'clamp(56px, 10vw, 168px)' }}
+            >
+              <span className="block">Websites that</span>
+              <span className="block">
+                <span
+                  className="italic"
+                  style={{
+                    fontFamily: 'var(--font-instrument), Georgia, serif',
+                    fontWeight: 400,
+                    color: '#BC6FF1',
+                  }}
+                >
+                  feel
+                </span>{' '}
+                alive.
               </span>
-            </span>
-            {' '}&amp; Smart{' '}
-            <span className="text-white/90">Digital Systems</span>
-          </motion.h1>
+            </h1>
 
-          {/* Subheadline */}
-          <motion.p
-            variants={fadeUp}
-            className="text-lg sm:text-xl text-white/50 max-w-2xl leading-relaxed"
-          >
-            We design and develop premium websites, dashboards, and custom web solutions
-            that help businesses grow with clarity, speed, and performance.
-          </motion.p>
+            <p className="mt-10 text-lg text-white/45 max-w-xl leading-relaxed">
+              {t.hero.subheadline}
+            </p>
 
-          {/* CTAs */}
-          <motion.div
-            variants={fadeUp}
-            className="flex flex-col sm:flex-row items-center gap-4 mt-2"
-          >
-            <Link
-              href="/contact"
-              className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm bg-brand-700 hover:bg-brand-600 text-white transition-all duration-300 glow-purple"
-            >
-              Start Your Project
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-200" />
-            </Link>
-            <Link
-              href="/work"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm border border-white/10 text-white/70 hover:text-white hover:border-white/20 transition-all duration-300"
-            >
-              View Our Work
-            </Link>
-          </motion.div>
+            <div className="mt-10 flex gap-3 flex-wrap">
+              <button
+                onClick={() => scrollTo('cta')}
+                className="group inline-flex items-center gap-2 px-7 py-3.5 bg-[#892CDC] text-white font-semibold rounded-lg hover:bg-[#52057B] transition-colors cursor-pointer"
+              >
+                {t.hero.cta1}
+                <span className="inline-block group-hover:translate-x-1 transition-transform">
+                  <ArrowRightIcon />
+                </span>
+              </button>
+              <button
+                onClick={() => scrollTo('projects')}
+                className="group inline-flex items-center gap-2 px-7 py-3.5 bg-transparent text-white font-semibold rounded-lg border border-white/15 hover:border-[#892CDC] hover:text-white transition-colors cursor-pointer"
+              >
+                {t.hero.cta2}
+                <span className="inline-block group-hover:translate-x-1 transition-transform">
+                  <ArrowRightIcon />
+                </span>
+              </button>
+            </div>
+          </div>
 
-          {/* Stats */}
-          <motion.div
-            variants={fadeUp}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-8 mt-10 pt-10 border-t border-white/5 w-full"
-          >
-            {stats.map((stat) => (
-              <div key={stat.label} className="flex flex-col items-center gap-1">
-                <span className="text-2xl sm:text-3xl font-bold text-white">{stat.value}</span>
-                <span className="text-xs text-white/40 text-center">{stat.label}</span>
+          {/* Right column — live index */}
+          <div className="col-span-12 lg:col-span-3 lg:border-l lg:border-[#52057B]/25 lg:pl-6">
+            <div className="text-[10px] font-mono tracking-widest uppercase text-white/25 mb-4">
+              Index / Now
+            </div>
+            <div className="flex flex-col divide-y divide-white/[0.06]">
+              {indexItems.map((it) => (
+                <button
+                  key={it.n}
+                  onClick={() => scrollTo(it.id)}
+                  className="group flex items-baseline gap-3 py-2.5 cursor-pointer w-full text-left"
+                >
+                  <span className="font-mono text-[10px] text-white/20 w-8">{it.n}</span>
+                  <span className="text-sm font-semibold text-white/80 group-hover:text-white group-hover:translate-x-0.5 transition-all">
+                    {it.label}
+                  </span>
+                  <span className="ml-auto text-[10px] text-white/25 font-mono">{it.sub}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom stats strip */}
+        <div className="mt-20 pt-8 border-t border-white/[0.07] grid grid-cols-2 md:grid-cols-4 gap-6">
+          {stats.map((s, i) => (
+            <div key={i} className="flex items-baseline gap-3">
+              <div className="text-3xl md:text-4xl font-black tracking-tight text-white">
+                {s.v}
               </div>
-            ))}
-          </motion.div>
-        </motion.div>
+              <div className="text-[11px] text-white/35 leading-tight max-w-[120px]">{s.l}</div>
+            </div>
+          ))}
+        </div>
       </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.4, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30"
-      >
-        <span className="text-xs tracking-widest uppercase">Scroll</span>
-        <ChevronDown size={16} className="animate-bounce" />
-      </motion.div>
     </section>
   )
 }

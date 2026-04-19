@@ -1,19 +1,11 @@
 // Dynamic Project Detail — SSG with generateStaticParams
-// All project pages are pre-built at deploy time for maximum CDN cache performance.
-// Unknown slugs return 404 via notFound().
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { createMetadata } from '@/lib/metadata'
-import {
-  getAllProjectSlugs,
-  getProjectBySlug,
-  getAllProjects,
-} from '@/lib/data/projects'
-import { Tag } from '@/components/ui/Tag'
+import { getAllProjectSlugs, getProjectBySlug, getAllProjects } from '@/lib/data/projects'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
-import { SectionLabel } from '@/components/ui/SectionLabel'
+import { StripedPlaceholder } from '@/components/ui/StripedPlaceholder'
 
 interface PageProps {
   params: { slug: string }
@@ -26,16 +18,26 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const project = getProjectBySlug(params.slug)
   if (!project) return {}
-
   return createMetadata({
     title: project.title,
     description: project.summary,
-    openGraph: {
-      title: `${project.title} | MMB`,
-      description: project.summary,
-      url: `/work/${project.slug}`,
-    },
+    openGraph: { title: `${project.title} | MMB`, description: project.summary, url: `/work/${project.slug}` },
   })
+}
+
+function ArrowLeftIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/>
+    </svg>
+  )
+}
+function ArrowRightIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 12h14"/><path d="M13 5l7 7-7 7"/>
+    </svg>
+  )
 }
 
 export default function ProjectDetailPage({ params }: PageProps) {
@@ -50,51 +52,56 @@ export default function ProjectDetailPage({ params }: PageProps) {
   return (
     <>
       {/* Hero */}
-      <section
-        className="relative min-h-[55vh] flex flex-col justify-end overflow-hidden pt-32"
-        style={{ background: `linear-gradient(135deg, ${project.coverColor} 0%, ${project.accentColor}60 100%)` }}
-      >
-        <div className="absolute inset-0 bg-hero-grid bg-grid-40 opacity-20 pointer-events-none" aria-hidden="true" />
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(17,0,28,0.7) 100%)' }}
-          aria-hidden="true"
+      <section className="relative min-h-[55vh] flex flex-col justify-end overflow-hidden pt-32 bg-black">
+        <StripedPlaceholder
+          dark
+          className="absolute inset-0"
+          angle={-20}
+          stripeGap={32}
         />
-        <div className="container-wide relative pb-16 z-10">
-          <AnimatedSection direction="up" className="flex flex-col gap-4 max-w-2xl">
+        <div className="relative max-w-[1400px] mx-auto px-6 lg:px-10 pb-16 z-10">
+          <AnimatedSection className="flex flex-col gap-4 max-w-2xl">
             <Link
               href="/work"
-              className="inline-flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors duration-200 group w-fit"
+              className="inline-flex items-center gap-2 text-sm text-white/45 hover:text-white transition-colors w-fit"
             >
-              <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform duration-200" />
+              <ArrowLeftIcon />
               Back to Work
             </Link>
-            <SectionLabel>{project.category}</SectionLabel>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white text-balance">
+            <div className="text-[10px] font-mono tracking-widest uppercase text-white/30">
+              {project.category}
+            </div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white">
               {project.title}
             </h1>
-            <p className="text-base text-white/60 leading-relaxed max-w-xl">
+            <p className="text-base leading-relaxed max-w-xl text-white/55">
               {project.summary}
             </p>
             <div className="flex flex-wrap gap-2 pt-2">
               {project.tags.map((tag) => (
-                <Tag key={tag} variant="purple">{tag}</Tag>
+                <span
+                  key={tag}
+                  className="px-2.5 py-1 text-[10px] font-mono rounded-full border border-[#52057B]/35 text-white/50"
+                >
+                  {tag}
+                </span>
               ))}
-              <Tag variant="ghost">{project.year}</Tag>
+              <span className="px-2.5 py-1 text-[10px] font-mono rounded-full border border-white/10 text-white/30">
+                {project.year}
+              </span>
             </div>
           </AnimatedSection>
         </div>
       </section>
 
       {/* Project description */}
-      <section className="section-padding bg-brand-950 relative">
-        <div className="absolute inset-0 bg-hero-grid bg-grid-40 opacity-20 pointer-events-none" aria-hidden="true" />
-        <div className="container-wide relative">
+      <section className="py-28 bg-black">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
           <div className="max-w-3xl mx-auto">
             <AnimatedSection>
-              <div className="glass-light rounded-3xl p-8 sm:p-10">
+              <div className="rounded-2xl p-8 sm:p-10 border border-[#52057B]/25 bg-[#070707]">
                 <h2 className="text-xl font-bold text-white mb-4">Project Overview</h2>
-                <p className="text-base text-white/60 leading-relaxed">{project.description}</p>
+                <p className="text-base text-white/55 leading-relaxed">{project.description}</p>
               </div>
             </AnimatedSection>
           </div>
@@ -102,44 +109,36 @@ export default function ProjectDetailPage({ params }: PageProps) {
       </section>
 
       {/* Prev / Next navigation */}
-      <section className="section-padding pt-0 bg-brand-950 relative">
-        <div className="container-wide">
-          <div className="border-t border-white/5 pt-12 grid sm:grid-cols-2 gap-4">
+      <section className="pb-28 bg-black">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
+          <div className="border-t border-[#52057B]/15 pt-12 grid sm:grid-cols-2 gap-4">
             {prev ? (
               <Link
                 href={`/work/${prev.slug}`}
-                className="group glass-light rounded-2xl p-6 border border-white/5 hover:border-brand-700/30 transition-all duration-300"
+                className="group bg-[#070707] rounded-2xl p-6 border border-[#52057B]/20 hover:border-[#892CDC]/50 transition-all duration-300"
               >
                 <div className="flex items-center gap-2 text-xs text-white/30 mb-2">
-                  <ArrowLeft size={12} className="group-hover:-translate-x-1 transition-transform duration-200" />
-                  Previous Project
+                  <ArrowLeftIcon />
+                  Previous
                 </div>
-                <h3 className="text-base font-semibold text-white group-hover:text-brand-300 transition-colors duration-200">
-                  {prev.title}
-                </h3>
-                <p className="text-xs text-white/40 mt-1">{prev.category}</p>
+                <h3 className="text-base font-bold text-white">{prev.title}</h3>
+                <p className="text-xs text-white/30 mt-1">{prev.category}</p>
               </Link>
-            ) : (
-              <div />
-            )}
+            ) : <div />}
 
             {next ? (
               <Link
                 href={`/work/${next.slug}`}
-                className="group glass-light rounded-2xl p-6 border border-white/5 hover:border-brand-700/30 transition-all duration-300 text-right sm:ml-auto w-full"
+                className="group bg-[#070707] rounded-2xl p-6 border border-[#52057B]/20 hover:border-[#892CDC]/50 transition-all duration-300 text-right sm:ml-auto w-full"
               >
                 <div className="flex items-center justify-end gap-2 text-xs text-white/30 mb-2">
-                  Next Project
-                  <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-200" />
+                  Next
+                  <ArrowRightIcon />
                 </div>
-                <h3 className="text-base font-semibold text-white group-hover:text-brand-300 transition-colors duration-200">
-                  {next.title}
-                </h3>
-                <p className="text-xs text-white/40 mt-1">{next.category}</p>
+                <h3 className="text-base font-bold text-white">{next.title}</h3>
+                <p className="text-xs text-white/30 mt-1">{next.category}</p>
               </Link>
-            ) : (
-              <div />
-            )}
+            ) : <div />}
           </div>
         </div>
       </section>

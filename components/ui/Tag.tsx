@@ -3,22 +3,22 @@ import { cn } from '@/lib/cn'
 interface TagProps {
   children: React.ReactNode
   className?: string
-  variant?: 'default' | 'purple' | 'ghost'
+  variant?: 'default' | 'dark' | 'ghost'
 }
 
 export function Tag({ children, className, variant = 'default' }: TagProps) {
   const variants = {
-    default: 'bg-white/5 text-white/60 border border-white/10',
-    purple: 'bg-brand-800/60 text-brand-400 border border-brand-700/40',
-    ghost: 'bg-transparent text-white/40 border border-white/5',
+    default: 'bg-[#52057B]/20 text-white/60 border border-[#52057B]/35',
+    dark: 'bg-[#52057B] text-white border border-[#52057B]',
+    ghost: 'bg-transparent text-white/45 border border-white/10',
   }
 
   return (
     <span
       className={cn(
-        'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+        'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium font-mono',
         variants[variant],
-        className
+        className,
       )}
     >
       {children}

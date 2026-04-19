@@ -1,12 +1,28 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Send, CheckCircle, ArrowRight } from 'lucide-react'
+import { useLanguage } from '@/lib/i18n'
+
+function ArrowRightIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 12h14"/><path d="M13 5l7 7-7 7"/>
+    </svg>
+  )
+}
+
+function CheckIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m5 13 4 4L19 7"/>
+    </svg>
+  )
+}
 
 export function ContactForm() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const { t } = useLanguage()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -30,104 +46,88 @@ export function ContactForm() {
 
   if (status === 'sent') {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="glass rounded-3xl p-10 flex flex-col items-center text-center gap-5"
-      >
-        <CheckCircle size={52} className="text-brand-400" />
-        <h3 className="text-2xl font-bold text-white">Message sent!</h3>
-        <p className="text-sm text-white/50 max-w-xs">
-          We&rsquo;ll review your project and get back to you within 24 hours.
-        </p>
+      <div className="bg-[#070707] border border-[#52057B]/25 rounded-2xl p-10 flex flex-col items-start gap-5">
+        <div className="w-12 h-12 rounded-full bg-[#52057B]/20 border border-[#892CDC]/50 text-[#BC6FF1] flex items-center justify-center">
+          <CheckIcon />
+        </div>
+        <div>
+          <h3 className="text-2xl font-black text-white tracking-tight mb-2">{t.cta.form.success}</h3>
+          <p className="text-sm text-white/45 max-w-xs">{t.cta.form.successMsg}</p>
+        </div>
         <button
           onClick={() => setStatus('idle')}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-brand-400 hover:text-white transition-colors cursor-pointer"
+          className="text-white/45 hover:text-white text-sm underline underline-offset-4 cursor-pointer"
         >
-          <ArrowRight size={15} />
-          Send another message
+          {t.cta.form.sendAnother}
         </button>
-      </motion.div>
+      </div>
     )
   }
 
   return (
-    <div className="glass rounded-3xl p-8 sm:p-10">
+    <div className="bg-[#070707] border border-[#52057B]/25 rounded-2xl p-8 sm:p-10">
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div className="grid sm:grid-cols-2 gap-5">
           <div>
-            <label htmlFor="contact-name" className="block text-xs font-semibold text-white/50 mb-2 uppercase tracking-wider">
-              Your Name
+            <label htmlFor="contact-name" className="block text-[10px] font-mono tracking-widest uppercase text-white/40 mb-2">
+              {t.cta.form.name}
             </label>
             <input
               id="contact-name"
               type="text"
               required
-              placeholder="John Doe"
+              placeholder={t.cta.form.namePlaceholder}
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-brand-600/60 focus:ring-1 focus:ring-brand-600/30 transition-all duration-200"
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#892CDC]/60 transition-colors"
             />
           </div>
           <div>
-            <label htmlFor="contact-email" className="block text-xs font-semibold text-white/50 mb-2 uppercase tracking-wider">
-              Email Address
+            <label htmlFor="contact-email" className="block text-[10px] font-mono tracking-widest uppercase text-white/40 mb-2">
+              {t.cta.form.email}
             </label>
             <input
               id="contact-email"
               type="email"
               required
-              placeholder="john@company.com"
+              placeholder={t.cta.form.emailPlaceholder}
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-brand-600/60 focus:ring-1 focus:ring-brand-600/30 transition-all duration-200"
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#892CDC]/60 transition-colors"
             />
           </div>
         </div>
         <div>
-          <label htmlFor="contact-message" className="block text-xs font-semibold text-white/50 mb-2 uppercase tracking-wider">
-            Project Brief
+          <label htmlFor="contact-message" className="block text-[10px] font-mono tracking-widest uppercase text-white/40 mb-2">
+            {t.cta.form.message}
           </label>
           <textarea
             id="contact-message"
             required
             rows={6}
-            placeholder="Tell us about your project, goals, and timeline..."
+            placeholder={t.cta.form.messagePlaceholder}
             value={form.message}
             onChange={(e) => setForm({ ...form, message: e.target.value })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-brand-600/60 focus:ring-1 focus:ring-brand-600/30 transition-all duration-200 resize-none"
+            className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#892CDC]/60 transition-colors resize-none"
           />
         </div>
 
         {status === 'error' && (
-          <p className="text-xs text-red-400">
-            Something went wrong. Please try again or email us directly at hello@mmb.dev
-          </p>
+          <p className="text-xs text-red-400">{t.cta.form.error}</p>
         )}
 
         <button
           type="submit"
           disabled={status === 'sending'}
-          className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold bg-brand-700 hover:bg-brand-600 disabled:opacity-60 disabled:cursor-not-allowed text-white transition-all duration-200 glow-purple cursor-pointer"
+          className="group flex items-center justify-between gap-2 w-full px-6 py-4 bg-[#892CDC] text-white font-bold rounded-xl hover:bg-[#52057B] transition-colors cursor-pointer text-sm disabled:opacity-60"
         >
-          {status === 'sending' ? (
-            <>
-              <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
-              Sending...
-            </>
-          ) : (
-            <>
-              <Send size={15} />
-              Send Message
-            </>
-          )}
+          <span>{status === 'sending' ? t.cta.form.sending : t.cta.form.submit}</span>
+          <span className="flex items-center gap-2">
+            <span className="font-mono text-[10px] text-white/60 uppercase tracking-widest">Reply &lt; 24h</span>
+            <ArrowRightIcon />
+          </span>
         </button>
-        <p className="text-center text-xs text-white/25">
-          No spam. Just a reply within 24 hours.
-        </p>
+        <p className="text-center text-xs text-white/25 font-mono">{t.cta.form.noSpam}</p>
       </form>
     </div>
   )
