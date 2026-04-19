@@ -28,23 +28,16 @@ export const metadata: Metadata = createMetadata({
 })
 
 export default function HomePage() {
-  const services = getAllServices()
-  const featuredProjects = getFeaturedProjects()
-  const processSteps = getAllProcessSteps()
-  const faqs = getAllFAQs()
-  const whyUsItems = getAllWhyUsItems()
-  const testimonials = getAllTestimonials()
-
   return (
     <>
       <HeroSection />
-      <ServicesPreview services={services} />
-      <ProjectsPreview projects={featuredProjects} />
-      <WhyUsSection items={whyUsItems} />
-      <ProcessSection steps={processSteps} />
+      <ServicesPreview />
+      <ProjectsPreview />
+      <ProcessSection />
+      <WhyUsSection />
       <AboutSnippet />
-      <FAQSection faqs={faqs} />
-      <CTASection testimonials={testimonials} />
+      <FAQSection />
+      <CTASection />
     </>
   )
 }

@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(python \"C:/Users/bo7aa/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"web development agency premium monochrome minimal dark\" --design-system -p \"MMB\" -f markdown)",
+      "Bash(python \"C:/Users/bo7aa/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"animation scroll reveal premium\" --domain ux)",
+      "Bash(python \"C:/Users/bo7aa/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"react vite component structure\" --stack react)",
+      "Bash(npm create *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(python3 *)",
+      "Bash(py *)",
+      "Bash(grep -E \"\\\\.\\(jsx|js\\)$\")",
+      "Bash(ls public/images/)",
+      "Bash(ls images/)",
+      "Bash(mkdir -p public/images)",
+      "Bash(cp \"images/black logo.png\" \"public/images/logo-dark.png\")",
+      "Bash(cp \"images/white logo.png\" \"public/images/logo-light.png\")",
+      "Bash(rm -rf images dist)",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('next:', p.dependencies.next, 'framer-motion:', p.dependencies['framer-motion'], 'tailwindcss:', p.devDependencies?.tailwindcss || p.dependencies?.tailwindcss\\)\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000__TRACKED_VAR__)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(curl -s http://localhost:3000/sitemap.xml)",
+      "Bash(curl *)",
+      "Bash(echo \"BUILD_EXIT:$?\")",
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(cd /tmp)",
+      "Bash(cp \"C:/Users/bo7aa/.claude/projects/B--Edducation-MMB/857196ae-19a1-4218-8351-d57df1e6b53e/tool-results/webfetch-1776540336014-4yz2d8.bin\" design.gz)",
+      "Bash(gunzip -c design.gz)",
+      "Bash(tar -tf design_full.tar)",
+      "Bash(tar -xf design_full.tar)"
+    ]
+  }
+}

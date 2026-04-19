@@ -13,8 +13,15 @@ export const projects: Project[] = [
     tags: ['Next.js', 'PostgreSQL', 'Stripe', 'WebSockets'],
     year: '2024',
     featured: true,
+    displaySize: 'wide',
+    tone: 'dark',
     coverColor: '#220135',
     accentColor: '#520380',
+    ar: {
+      title: 'منصة EduCore',
+      summary:
+        'منصة تعليمية متكاملة بإدارة الدورات ولوحات الطلاب وتتبع التقدم ودعم الجلسات المباشرة.',
+    },
   },
   {
     id: 2,
@@ -28,8 +35,15 @@ export const projects: Project[] = [
     tags: ['Next.js', 'Booking API', 'i18n', 'Framer Motion'],
     year: '2024',
     featured: true,
+    displaySize: 'tall',
+    tone: 'light',
     coverColor: '#3A025B',
     accentColor: '#6B04A8',
+    ar: {
+      title: 'فندق غراندور',
+      summary:
+        'موقع فندق فاخر مع عروض غرف غامرة ومحرك حجز متكامل ودعم متعدد اللغات.',
+    },
   },
   {
     id: 3,
@@ -43,8 +57,15 @@ export const projects: Project[] = [
     tags: ['React', 'Mapbox', 'Prisma', 'Recharts'],
     year: '2024',
     featured: true,
+    displaySize: 'normal',
+    tone: 'dark',
     coverColor: '#11001C',
     accentColor: '#3A025B',
+    ar: {
+      title: 'لوحة تحكم Strata',
+      summary:
+        'لوحة تحكم محفظة عقارية مع بحث مبني على الخريطة وتحليلات وتكامل CRM وسير عمل الوكلاء.',
+    },
   },
   {
     id: 4,
@@ -58,8 +79,15 @@ export const projects: Project[] = [
     tags: ['React', 'Node.js', 'PostgreSQL', 'Redis'],
     year: '2023',
     featured: false,
+    displaySize: 'normal',
+    tone: 'light',
     coverColor: '#140129',
     accentColor: '#520380',
+    ar: {
+      title: 'Nexus للإدارة',
+      summary:
+        'نظام إداري مؤسسي مع وصول محدد بالأدوار وجداول بيانات فورية وسجلات مراجعة وإدارة الفريق.',
+    },
   },
   {
     id: 5,
@@ -73,8 +101,15 @@ export const projects: Project[] = [
     tags: ['Next.js', 'Stripe', 'Twilio', 'Supabase'],
     year: '2023',
     featured: false,
+    displaySize: 'normal',
+    tone: 'light',
     coverColor: '#220135',
     accentColor: '#6B04A8',
+    ar: {
+      title: 'Reserva للحجز',
+      summary:
+        'منصة حجز متعددة الخدمات مع مزامنة التقويم وتذكيرات آلية ومعالجة مدفوعات ولوحات المزودين.',
+    },
   },
   {
     id: 6,
@@ -88,8 +123,15 @@ export const projects: Project[] = [
     tags: ['Next.js', 'Framer Motion', 'HubSpot', 'Vercel'],
     year: '2023',
     featured: false,
+    displaySize: 'wide',
+    tone: 'dark',
     coverColor: '#3A025B',
     accentColor: '#8A05D4',
+    ar: {
+      title: 'وكالة Lumina',
+      summary:
+        'صفحة هبوط تجارية عالية التحويل مع بطل سينمائي ودراسات حالة متحركة ونموذج عملاء متكامل.',
+    },
   },
 ]
 
@@ -109,4 +151,12 @@ export function getAllProjectSlugs(): string[] {
   return projects.map((p) => p.slug)
 }
 
-export const projectCategories = ['All', 'EdTech', 'Hospitality', 'Real Estate', 'Admin System', 'Booking System', 'Landing Page']
+export const projectCategories = [
+  'All',
+  'EdTech',
+  'Hospitality',
+  'Real Estate',
+  'Admin System',
+  'Booking System',
+  'Landing Page',
+]

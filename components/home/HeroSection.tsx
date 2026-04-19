@@ -90,25 +90,28 @@ export function HeroSection() {
               Independent web studio
             </div>
 
-            <h1
-              className="font-black tracking-[-0.02em] leading-[0.95] text-white"
-              style={{ fontSize: 'clamp(56px, 10vw, 168px)' }}
-            >
-              <span className="block">Websites that</span>
-              <span className="block">
-                <span
-                  className="italic"
-                  style={{
-                    fontFamily: 'var(--font-instrument), Georgia, serif',
-                    fontWeight: 400,
-                    color: '#BC6FF1',
-                  }}
-                >
-                  feel
-                </span>{' '}
-                alive.
-              </span>
-            </h1>
+        <h1
+            className="font-black tracking-[-0.02em] leading-[0.95] text-white"
+            style={{ fontSize: 'clamp(56px, 10vw, 168px)' }}
+          >
+            <span className="block">Websites</span>
+
+            <span className="block whitespace-nowrap">
+               that{' '}
+              <span
+                className="italic"
+                style={{
+                  fontFamily: 'var(--font-instrument), Georgia, serif',
+                  fontWeight: 400,
+                  color: '#BC6FF1',
+                }}
+              >
+                feel
+              </span>{' '}
+              alive
+            </span>
+          </h1>
+
 
             <p className="mt-10 text-lg text-white/45 max-w-xl leading-relaxed">
               {t.hero.subheadline}

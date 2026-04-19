@@ -10,7 +10,14 @@ export interface Project {
   featured: boolean
   coverColor: string
   accentColor: string
+  displaySize?: 'wide' | 'tall' | 'normal'
+  tone?: 'dark' | 'light'
   liveUrl?: string
+  ar?: {
+    title: string
+    summary: string
+    description?: string
+  }
 }
 
 export interface Service {
@@ -19,11 +26,19 @@ export interface Service {
   title: string
   description: string
   tags: string[]
+  ar?: {
+    title: string
+    description: string
+  }
 }
 
 export interface FAQ {
   question: string
   answer: string
+  ar?: {
+    question: string
+    answer: string
+  }
 }
 
 export interface Testimonial {
@@ -31,6 +46,9 @@ export interface Testimonial {
   author: string
   title: string
   company: string
+  ar?: {
+    quote: string
+  }
 }
 
 export interface ProcessStep {
@@ -38,10 +56,19 @@ export interface ProcessStep {
   title: string
   description: string
   duration: string
+  ar?: {
+    title: string
+    description: string
+    duration: string
+  }
 }
 
 export interface WhyUsItem {
   iconName: string
   title: string
   description: string
+  ar?: {
+    title: string
+    description: string
+  }
 }
