@@ -10,7 +10,6 @@ import { ProcessSection } from "@/components/home/ProcessSection";
 import { AboutSnippet } from "@/components/home/AboutSnippet";
 import { FAQSection } from "@/components/home/FAQSection";
 import { CTASection } from "@/components/home/CTASection";
-import { MmbSection } from "@/components/home/MmbSection";
 import { getAllServices } from "@/lib/data/services";
 import { getAllProcessSteps } from "@/lib/data/process";
 import { getAllFAQs } from "@/lib/data/faqs";
@@ -31,7 +30,6 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <MmbSection />
       <ServicesPreview />
       <ProjectsPreview />
       <ProcessSection />
