@@ -126,13 +126,6 @@ export function Footer() {
                 </a>
               ))}
             </div>
-            <div className="mt-6 flex items-center gap-2 text-[11px]">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60 animate-ping" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              </span>
-              <span className="text-white/45">Booking Q3 — 2 slots left</span>
-            </div>
           </div>
         </div>
 

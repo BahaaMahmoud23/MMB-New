@@ -1,47 +1,63 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { useLanguage } from '@/lib/i18n'
+import { useEffect, useState } from "react";
+import { useLanguage } from "@/lib/i18n";
 
 function scrollTo(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
 function ArrowRightIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M5 12h14" /><path d="M13 5l7 7-7 7" />
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 12h14" />
+      <path d="M13 5l7 7-7 7" />
     </svg>
-  )
+  );
 }
 
 const indexItems = [
-  { n: '001', label: 'Services', sub: '06 offerings', id: 'services' },
-  { n: '002', label: 'Work', sub: '06 selected', id: 'projects' },
-  { n: '003', label: 'Process', sub: '06 phases', id: 'process' },
-  { n: '004', label: 'About', sub: 'Since 2019', id: 'about' },
-  { n: '005', label: 'FAQ', sub: '08 answers', id: 'faq' },
-  { n: '006', label: 'Contact', sub: 'hello@mmb.dev', id: 'cta' },
-]
+  { n: "001", label: "Services", sub: "06 offerings", id: "services" },
+  { n: "002", label: "Work", sub: "06 selected", id: "projects" },
+  { n: "003", label: "Process", sub: "06 phases", id: "process" },
+  { n: "004", label: "About", sub: "Since 2019", id: "about" },
+  { n: "005", label: "FAQ", sub: "08 answers", id: "faq" },
+  { n: "006", label: "Contact", sub: "hello@mmb.dev", id: "cta" },
+];
 
 export function HeroSection() {
-  const { t } = useLanguage()
-  const [time, setTime] = useState('')
+  const { t } = useLanguage();
+  const [time, setTime] = useState("");
 
   useEffect(() => {
     const update = () =>
-      setTime(new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }))
-    update()
-    const id = setInterval(update, 10000)
-    return () => clearInterval(id)
-  }, [])
+      setTime(
+        new Date().toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        }),
+      );
+    update();
+    const id = setInterval(update, 10000);
+    return () => clearInterval(id);
+  }, []);
 
   const stats = [
-    { v: '50+', l: 'Projects delivered' },
-    { v: '98%', l: 'Client satisfaction' },
-    { v: '5yr', l: 'Track record' },
-    { v: '14d', l: 'Average kickoff' },
-  ]
+    { v: "50+", l: "Projects delivered" },
+    { v: "98%", l: "Client satisfaction" },
+    { v: "5yr", l: "Track record" },
+    { v: "14d", l: "Average kickoff" },
+  ];
 
   return (
     <section
@@ -52,7 +68,8 @@ export function HeroSection() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 60% 50% at 30% 50%, rgba(82,5,123,0.18) 0%, transparent 70%)',
+          background:
+            "radial-gradient(ellipse 60% 50% at 30% 50%, rgba(82,5,123,0.18) 0%, transparent 70%)",
         }}
       />
 
@@ -60,16 +77,19 @@ export function HeroSection() {
       <div
         className="absolute inset-0 pointer-events-none opacity-40"
         style={{
-          backgroundImage: 'radial-gradient(circle, rgba(137,44,220,0.25) 1px, transparent 1px)',
-          backgroundSize: '32px 32px',
-          maskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 90%)',
-          WebkitMaskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 90%)',
+          backgroundImage:
+            "radial-gradient(circle, rgba(137,44,220,0.25) 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+          maskImage:
+            "radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 90%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 90%)",
         }}
       />
 
       <div className="relative max-w-[1400px] mx-auto px-6 lg:px-10 w-full">
         {/* Top meta bar */}
-        <div className="flex items-center justify-between text-[10px] font-mono tracking-widest uppercase text-white/25 mb-12 pt-4">
+        <div className="flex items-center justify-between text-[10px] font-mono tracking-widest uppercase text-white/70 mb-12 pt-4">
           <div className="flex items-center gap-3">
             <span>MMB · 001</span>
             <span className="h-px w-6 bg-white/10" />
@@ -90,28 +110,27 @@ export function HeroSection() {
               Independent web studio
             </div>
 
-        <h1
-            className="font-black tracking-[-0.02em] leading-[0.95] text-white"
-            style={{ fontSize: 'clamp(56px, 10vw, 168px)' }}
-          >
-            <span className="block">Websites</span>
+            <h1
+              className="font-black tracking-[-0.02em] leading-[0.95] text-white"
+              style={{ fontSize: "clamp(56px, 10vw, 168px)" }}
+            >
+              <span className="block">Systems</span>
 
-            <span className="block whitespace-nowrap">
-               that{' '}
-              <span
-                className="italic"
-                style={{
-                  fontFamily: 'var(--font-instrument), Georgia, serif',
-                  fontWeight: 400,
-                  color: '#BC6FF1',
-                }}
-              >
-                feel
-              </span>{' '}
-              alive
-            </span>
-          </h1>
-
+              <span className="block whitespace-nowrap">
+                that{" "}
+                <span
+                  className="italic"
+                  style={{
+                    fontFamily: "var(--font-instrument), Georgia, serif",
+                    fontWeight: 400,
+                    color: "#BC6FF1",
+                  }}
+                >
+                  feel
+                </span>{" "}
+                alive
+              </span>
+            </h1>
 
             <p className="mt-10 text-lg text-white/45 max-w-xl leading-relaxed">
               {t.hero.subheadline}
@@ -119,7 +138,7 @@ export function HeroSection() {
 
             <div className="mt-10 flex gap-3 flex-wrap">
               <button
-                onClick={() => scrollTo('cta')}
+                onClick={() => scrollTo("cta")}
                 className="group inline-flex items-center gap-2 px-7 py-3.5 bg-[#892CDC] text-white font-semibold rounded-lg hover:bg-[#52057B] transition-colors cursor-pointer"
               >
                 {t.hero.cta1}
@@ -128,7 +147,7 @@ export function HeroSection() {
                 </span>
               </button>
               <button
-                onClick={() => scrollTo('projects')}
+                onClick={() => scrollTo("projects")}
                 className="group inline-flex items-center gap-2 px-7 py-3.5 bg-transparent text-white font-semibold rounded-lg border border-white/15 hover:border-[#892CDC] hover:text-white transition-colors cursor-pointer"
               >
                 {t.hero.cta2}
@@ -151,11 +170,15 @@ export function HeroSection() {
                   onClick={() => scrollTo(it.id)}
                   className="group flex items-baseline gap-3 py-2.5 cursor-pointer w-full text-left"
                 >
-                  <span className="font-mono text-[10px] text-white/20 w-8">{it.n}</span>
+                  <span className="font-mono text-[10px] text-white/35 w-8">
+                    {it.n}
+                  </span>
                   <span className="text-sm font-semibold text-white/80 group-hover:text-white group-hover:translate-x-0.5 transition-all">
                     {it.label}
                   </span>
-                  <span className="ml-auto text-[10px] text-white/25 font-mono">{it.sub}</span>
+                  <span className="ml-auto text-[10px] text-white/50 font-mono">
+                    {it.sub}
+                  </span>
                 </button>
               ))}
             </div>
@@ -169,11 +192,13 @@ export function HeroSection() {
               <div className="text-3xl md:text-4xl font-black tracking-tight text-white">
                 {s.v}
               </div>
-              <div className="text-[11px] text-white/35 leading-tight max-w-[120px]">{s.l}</div>
+              <div className="text-[11px] text-white/50 leading-tight max-w-[120px]">
+                {s.l}
+              </div>
             </div>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }

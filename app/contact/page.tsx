@@ -1,4 +1,3 @@
-// Contact page — SSG shell; form submission handled by /api/contact
 import type { Metadata } from 'next'
 import { createMetadata } from '@/lib/metadata'
 import { PageHero } from '@/components/pages/PageHero'

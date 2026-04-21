@@ -1,4 +1,3 @@
-// Services page — SSG
 import type { Metadata } from 'next'
 import { createMetadata } from '@/lib/metadata'
 import { getAllServices } from '@/lib/data/services'

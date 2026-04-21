@@ -9,6 +9,7 @@ const navLinks = [
   { n: '03', id: 'process' },
   { n: '04', id: 'about' },
   { n: '05', id: 'faq' },
+  { n: '06', id: 'mmb' },
 ]
 
 const navLabels: Record<string, { en: string; ar: string }> = {
@@ -17,6 +18,7 @@ const navLabels: Record<string, { en: string; ar: string }> = {
   process: { en: 'Process', ar: 'العملية' },
   about: { en: 'About', ar: 'عن الشركة' },
   faq: { en: 'FAQ', ar: 'الأسئلة' },
+  mmb: { en: 'mmb', ar: 'تواصل' },
 }
 
 function ArrowRightIcon() {
@@ -115,15 +117,6 @@ export function Navbar() {
           >
             {lang === 'en' ? 'AR' : 'EN'}
           </button>
-
-          {/* Availability pill */}
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#52057B]/30 bg-black/60 backdrop-blur-sm">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60 animate-ping" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            </span>
-            <span className="text-[11px] font-medium text-white/60">Booking Q3</span>
-          </div>
 
           <button
             onClick={() => handleLink('cta')}

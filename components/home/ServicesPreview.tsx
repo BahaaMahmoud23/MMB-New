@@ -71,7 +71,7 @@ function ServiceCard({ service, index, lang }: { service: Service; index: number
         <h3 className={`text-lg font-bold mb-3 transition-colors ${hover ? 'text-white' : 'text-white/90'}`}>
           {title}
         </h3>
-        <p className={`text-sm leading-relaxed mb-6 transition-colors ${hover ? 'text-white/70' : 'text-white/45'}`}>
+        <p className={`text-sm leading-relaxed mb-6 transition-colors ${hover ? 'text-white/70' : 'text-white/60'}`}>
           {desc}
         </p>
         <div className="flex flex-wrap gap-1.5">
