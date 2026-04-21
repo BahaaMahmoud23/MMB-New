@@ -9,7 +9,6 @@ const navLinks = [
   { n: '03', id: 'process' },
   { n: '04', id: 'about' },
   { n: '05', id: 'faq' },
-  { n: '06', id: 'mmb' },
 ]
 
 const navLabels: Record<string, { en: string; ar: string }> = {
@@ -18,7 +17,6 @@ const navLabels: Record<string, { en: string; ar: string }> = {
   process: { en: 'Process', ar: 'العملية' },
   about: { en: 'About', ar: 'عن الشركة' },
   faq: { en: 'FAQ', ar: 'الأسئلة' },
-  mmb: { en: 'mmb', ar: 'تواصل' },
 }
 
 function ArrowRightIcon() {
